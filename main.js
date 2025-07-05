@@ -1,4 +1,5 @@
 console.log("JavaScript Datei geladen")
+let editingStatus = false;
 
 let todosList = [
     { "title": "waschen", "completed": true, "date": "02.07.2025" },
@@ -100,6 +101,11 @@ function deleteToDo(index) {
 }
 
 function editToDo(index) {
+    if (editingStatus === "true") {
+        editingStatus = "false";
+        renderToDos();
+    }
+    editingStatus = "true";
     const currentTodoElement = document.getElementById(`todo-item-${index}`);
     const currentToDo = todosList[index];
     const toDoEditbox = `
@@ -116,12 +122,12 @@ function editToDo(index) {
         todosList[index].title = document.getElementById(`editbox-${index}`).value;
         todosList[index].completed = false;
         renderToDos(); // setzt nach dem speichern button das element automatisch wieder auf die standard anzeige zurück
-        console.log(todosList[index].title);
+        editingStatus = "false";
     })
 
     document.getElementById(`abort-${index}`).addEventListener('click', function () {
         renderToDos();
-        console.log(todosList[index].title);
+        editingStatus = "false";
     })
 }
 

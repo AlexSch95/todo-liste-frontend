@@ -34,9 +34,9 @@ function renderToDos() {
         const strikethrough = currentToDo.completed ? 'text-decoration-line-through' : '';
         // console.log(currentToDo.title + ' bekommt den Wert ' + isChecked)
         const toDoHtml = `
-        <li class="list-group-item d-flex justify-content-between align-items-center">
+        <li id="todo-item-${i}" class="list-group-item d-flex justify-content-between align-items-center">
         <input type="checkbox" class="form-check-input border-dark" onchange="changeStatus(${i})" ${isChecked}>
-        <span class="${strikethrough}">${currentToDo.title}</span>
+        <span id="todo-${i}" class="${strikethrough}">${currentToDo.title}</span>
         <div>
         <button class="btn btn-lg mx-auto btn-success" onclick="editToDo(${i})">✏️</button>
         <button class="btn btn-lg mx-auto btn-danger" onclick="deleteToDo(${i})">🗑️</button>
@@ -100,16 +100,29 @@ function deleteToDo(index) {
 }
 
 function editToDo(index) {
-    const currentText = todosList[index].title;
-    const newTitle = prompt("Bearbeite den Titel", currentText);
-    if (newTitle === null) {
-        console.log("Kein Titel eingegeben")
-        return;
-    }
-    const trimmedTitle = newTitle.trim();
-    todosList[index].title = trimmedTitle;
-    todosList[index].completed = false;
-    renderToDos()
+    const currentTodoElement = document.getElementById(`todo-item-${index}`);
+    const currentToDo = todosList[index];
+    const toDoEditbox = `
+    <input type="checkbox" class="form-check-input border-dark" onchange="changeStatus(${index})">
+    <input type="text" id="editbox-${index}" name="editbox" value="${currentToDo.title}">
+    <div>
+    <button id="save-${index}" class="btn btn-lg mx-auto btn-success" onclick="">✅</button>
+    <button id="abort-${index}" class="btn btn-lg mx-auto btn-danger" onclick="">❌</button>
+    </div>
+    `
+    currentTodoElement.innerHTML = toDoEditbox;
+
+    document.getElementById(`save-${index}`).addEventListener('click', function () {
+        todosList[index].title = document.getElementById(`editbox-${index}`).value;
+        todosList[index].completed = false;
+        renderToDos(); // setzt nach dem speichern button das element automatisch wieder auf die standard anzeige zurück
+        console.log(todosList[index].title);
+    })
+
+    document.getElementById(`abort-${index}`).addEventListener('click', function () {
+        renderToDos();
+        console.log(todosList[index].title);
+    })
 }
 
 // Wir wollen einen Event-Listener definieren

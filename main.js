@@ -13,9 +13,16 @@ function changeStatus(index) {
     renderToDos();
 }
 
+function clearSearch() {
+    const searchBox = document.getElementById("searchbox");
+    searchBox.value = "";
+    renderToDos();
+}
+
 function renderToDos() {
     // wir holen uns die todoList aus dem html doc
     const todoListElement = document.getElementById("todoList");
+    const todoSearch = document.getElementById("searchbox").value.toLowerCase();
     // console.log(todoListElement);
     // wir leeren die ToDoList
     todoListElement.innerHTML = "";
@@ -23,31 +30,36 @@ function renderToDos() {
     // mit einer for schleife über der todos iterieren
     for (let i = 0; i < todosList.length; i++) {
         const currentToDo = todosList[i]
-        // erzeuge jeweils eine Zeile für das ToDo Element als li-Element in html
-        // Hier wird überprüft ob completed     ? wenn wahr : wenn falsch
-        const isChecked = currentToDo.completed ? 'checked' : '';
-        // let isChecked;
-        // if (currentToDo.completed == true){
-        //     isChecked = 'checked';
-        // } else {
-        //     isChecked = '';
-        // }
-        const strikethrough = currentToDo.completed ? 'text-decoration-line-through' : '';
-        // console.log(currentToDo.title + ' bekommt den Wert ' + isChecked)
-        const toDoHtml = `
-        <li id="todo-item-${i}" class="list-group-item d-flex justify-content-between align-items-center">
-        <input type="checkbox" class="form-check-input border-dark" onchange="changeStatus(${i})" ${isChecked}>
-        <span id="todo-${i}" class="${strikethrough}">${currentToDo.title}</span>
-        <div>
-        <button class="btn btn-lg mx-auto btn-success" onclick="editToDo(${i})">✏️</button>
-        <button class="btn btn-lg mx-auto btn-danger" onclick="deleteToDo(${i})">🗑️</button>
-        </div>
-        </li>
+        const currentToDoTitle = currentToDo.title;
+        if (currentToDoTitle.toLowerCase().includes(todoSearch.trim()) === true) {
+            console.log(`filtere nach: ${todoSearch.trim()}`);
+            // erzeuge jeweils eine Zeile für das ToDo Element als li-Element in html
+            // Hier wird überprüft ob completed     ? wenn wahr : wenn falsch
+            const isChecked = currentToDo.completed ? 'checked' : '';
+            // let isChecked;
+            // if (currentToDo.completed == true){
+            //     isChecked = 'checked';
+            // } else {
+            //     isChecked = '';
+            // }
+            const strikethrough = currentToDo.completed ? 'text-decoration-line-through' : '';
+            // console.log(currentToDo.title + ' bekommt den Wert ' + isChecked)
+            const toDoHtml = `
+            <li id="todo-item-${i}" class="list-group-item d-flex justify-content-between align-items-center">
+            <input type="checkbox" class="form-check-input border-dark" onchange="changeStatus(${i})" ${isChecked}>
+            <span id="todo-${i}" class="${strikethrough}">${currentToDo.title}</span>
+            <div>
+            <button class="btn btn-lg mx-auto btn-success" onclick="editToDo(${i})">✏️</button>
+            <button class="btn btn-lg mx-auto btn-danger" onclick="deleteToDo(${i})">🗑️</button>
+            </div>
+            </li>
 
-        `
+            `
 
-        // füge erzeugte Zeile der ToDoList hinzu
-        todoListElement.innerHTML += toDoHtml;
+            // füge erzeugte Zeile der ToDoList hinzu
+            todoListElement.innerHTML += toDoHtml;
+        }
+
     }
 
 

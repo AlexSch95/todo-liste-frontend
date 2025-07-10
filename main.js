@@ -121,7 +121,6 @@ function editToDo(index) {
     const currentTodoElement = document.getElementById(`todo-item-${index}`);
     const currentToDo = todosList[index];
     const toDoEditbox = `
-    <input type="checkbox" class="form-check-input border-dark" onchange="changeStatus(${index})">
     <input type="text" id="editbox-${index}" name="editbox" value="${currentToDo.title}">
     <div>
     <button id="save-${index}" class="btn btn-lg mx-auto btn-success" onclick="">✅</button>
